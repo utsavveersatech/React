@@ -1,0 +1,29 @@
+<div align="right">
+<i class="action" ng-click="dashboardtransition()">{{globals.currentUser.username}} Dashboard </i>|
+<i class="action" ng-click="logouttransition()"> Logout</i>
+</div>
+<br>
+<br>
+<div ng-show="dataLoading" class="alert alert-danger">{{error}}</div>
+
+<div ng-show="pendinginv[0]" class="alert alert-info">
+    <center><b>Inventories Waiting for Approval</b></center>
+</div>
+<div ng-show="!loading && !pendinginv[0]" class="alert alert-danger"><center>No Inventories waiting for approval</center></div>
+
+<table ng-show="pendinginv[0]" class="table">
+
+<thead style="font-size: 110%;"><b><td align="center">Updated User</td><td align="center">Operation Performed</td><td align="center">Product Id</td><td align="center">Product Name</td><td align="center">Vendor</td><td align="center">MRP</td><td align="center">Batch Num</td><td align="center">Batch Date</td><td align="center">Quantity</td><td></td></b></thead>
+	<tr ng-repeat="inv in pendinginv">
+		<td align="center">{{inv.modifiedby}}</td>
+		<td align="center">{{inv.lastoperation}}</td>
+		<td align="center">{{inv.productid}}</td>
+		<td align="center">{{inv.productname}}</td>
+		<td align="center">{{inv.vendor}}</td>
+		<td align="center">{{inv.mrp}}</td>
+		<td align="center">{{inv.batchnum}}</td>
+		<td align="center">{{inv.batchdate}}</td>
+		<td align="center">{{inv.quantity}}</td>
+		<td align="center"><i class="action" class="material-icons action" ng-click="approve(inv.id)">Approve</i></td>
+	 </tr>
+ </table>
