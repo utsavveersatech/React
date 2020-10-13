@@ -10,7 +10,11 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20190304220502) do
+ActiveRecord::Schema.define(version: 20190304213733) do
+
+  # These are extensions that must be enabled in order to support this database
+  enable_extension "plpgsql"
+  enable_extension "adminpack"
 
   create_table "inventories", force: :cascade do |t|
     t.string "productid"
@@ -31,6 +35,7 @@ ActiveRecord::Schema.define(version: 20190304220502) do
     t.string "name"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["name"], name: "index_roles_on_name", unique: true
   end
 
   create_table "userroles", force: :cascade do |t|
@@ -46,6 +51,7 @@ ActiveRecord::Schema.define(version: 20190304220502) do
     t.string "email"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["username"], name: "index_users_on_username", unique: true
   end
 
 end

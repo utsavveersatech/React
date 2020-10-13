@@ -13,7 +13,7 @@ gem 'coffee-script-source', '1.8.0'
 
 # Use sqlite3 as the database for Active Record
 gem 'sqlite3', '~> 1.3.6'
-
+gem 'pg'
 gem 'mysql2'
 
 gem 'rails_admin'

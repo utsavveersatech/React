@@ -61,26 +61,6 @@
 # 	email: 'fifthuser@gmail.com'
 # })
 
-# Userrole.create({
-# 	userid: 1,
-# 	roleid: 1
-# })
-
-# Userrole.create({
-# 	userid: 2,
-# 	roleid: 2
-# })
-
-# Userrole.create({
-# 	userid: 3,
-# 	roleid: 2
-# })
-
-# Userrole.create({
-# 	userid: 3,
-# 	roleid: 1
-# })
-
 
 # Role.create({
 # 	name: 'Store Manager'
@@ -89,3 +69,23 @@
 # Role.create({
 # 	name: 'Store Assistant'
 # })
+
+Userrole.create({
+	userid: 1,
+	roleid: 1
+})
+
+Userrole.create({
+	userid: 2,
+	roleid: 2
+})
+
+Userrole.create({
+	userid: 3,
+	roleid: 2
+})
+
+Userrole.create({
+	userid: 3,
+	roleid: 1
+})

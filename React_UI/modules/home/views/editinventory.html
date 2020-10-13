@@ -1,52 +1,137 @@
 <div align="right">
-    <i class="action" ng-click="dashboardtransition()">{{globals.currentUser.username}} Dashboard </i>|
-    <i class="action" ng-click="logouttransition()"> Logout</i>
+    <i class="action" ng-click="logouttransition()">Logout</i>
 </div>
 <br>
 <br>
-<div class="alert alert-info">
-    <center><b>Edit Inventory</b></center>
+<div class="title alert alert-info">
+    <center><b>Edit Post</b></center>
 </div>
 <div ng-show="error" class="alert alert-danger">{{error}}</div>
-<form name="form" ng-submit="edit(editrecord.id)" role="form">
-    <div class="form-group">
-        <label for="productid">Product Id</label>
-        <input type="text" name="productid" id="productid" class="form-control" ng-model="editrecord.productid" required />
-        <span ng-show="form.productid.$dirty && form.productid.$error.required" class="help-block">Product Id is required</span>
+<div class="post-view">
+    <form name="form"  ng-submit="saveEdit(editrecord.id)" role="form">
+        <div class="post-actions">
+            <button ng-click="cancel()" class="btn btn-danger">< Back</button>
+            <button type="submit" ng-disabled="form.$invalid || dataLoading" class="btn btn-danger">Save</button>
+            <img ng-if="dataLoading" src="data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA=="/>
+        </div>
+        <div class="form-group">
+            <label for="productname">Post Name</label>
+            <input type="text" name="productname" id="productname" class="form-control" ng-model="editrecord.productname" required />
+            <span ng-show="form.productname.$dirty && form.productname.$error.required" class="help-block">Post Name is required</span>
+        </div>
+        <div class="form-group">
+            <label for="Vendor">Message</label>
+            <textarea ng-model="editrecord.vendor" name="Vendor" id="Vendor" class="form-control" required />
+            <span ng-show="form.Vendor.$dirty && form.Vendor.$error.required" class="help-block">Message is required</span>
+        </div>
+    </form>
+    <div class="reactionsReact">
+        <div>
+           <span ng-show="totalReactedCount" class="contentReactionsContainer">
+                <span class="contentReaction tooltipcontrol" ng-show="value.count != 0" ng-mouseleave="hideToolTip()" ng-mouseover='getReactedUsers(contentId, key, true)' id="control-content-{{contentId}}-react-{{key}}" ng-repeat="(key, value) in contentReactions">
+                    <span class="tooltiptext" id="tooltip-content-{{contentId}}-react-{{key}}">
+                        <div>
+                            <b>
+                                {{value.name}}
+                            </b>
+                            <div ng-repeat="(key, value) in value.reactedUsers">
+                                {{value.first_name}} {{value.last_name}}
+                            </div>
+                        </div>
+                    </span>
+                    <span>
+                        {{value.emoji}}
+                    </span>
+                </span>
+                <span class="totalReactedCount" ng-click="openContentReactionsPopup(contentId, true)">{{totalReactedCount}}</span>
+            </span>
+            <button style='outline: none;' ng-click="openReactionsContainer(contentId)" class="btn btn-success">React</button>
+            <span class="reactionsContainer" id="reactionsContainer-{{contentId}}">
+                <span class="reaction tooltipcontrol" ng-click="toggleTriggerReaction(contentId, key, value.contentReactionId, true)" id="content-{{contentId}}-react-{{key}}" ng-repeat="(key, value) in contentReactions" on-finish-render="ngRepeatFinished">
+                    <iframe  style="display: none; width: 0; height: 0"/>
+                    <span class="tooltiptext">
+                        {{value.name}}
+                    </span>
+                    <span>
+                        {{value.emoji}}
+                    </span>
+                </span>
+            </span>
+        </div>
     </div>
-    <div class="form-group">
-        <label for="productname">Product Name</label>
-        <input type="text" name="productname" id="productname" class="form-control" ng-model="editrecord.productname" required />
-        <span ng-show="form.productname.$dirty && form.productname.$error.required" class="help-block">Product Name is required</span>
+    <div class="commentContainer" ng-repeat="(commentId, comment_value) in contents">
+        <label for="Vendor">{{comment_value.author}}</label>
+        <textarea class="comment" ng-model="comment_value.content" name="Vendor" id="Vendor" class="form-control" required />
+
+        <div class="reactionsReact">
+            <div>
+               <span ng-show="comment_value.totalReactedCount" class="contentReactionsContainer">
+                    <span ng-show="value.count != 0" class="contentReaction tooltipcontrol" id="control-content-{{commentId}}-react-{{key}}" ng-mouseleave="hideToolTip(commentId)" ng-mouseover='getReactedUsers(commentId, key, false)' ng-repeat="(key, value) in comment_value.contentReactions">
+                        <span class="tooltiptext" id="tooltip-content-{{commentId}}-react-{{key}}">
+                            <div>
+                                <b>
+                                    {{value.name}}
+                                </b>
+                                <div ng-repeat="(key, value) in value.reactedUsers">
+                                    {{value.first_name}} {{value.last_name}}
+                                </div>
+                            </div>
+                        </span>
+                        <span>
+                            {{value.emoji}}
+                        </span>
+                    </span>
+                    <span class="totalReactedCount" ng-click="openContentReactionsPopup(commentId)">{{comment_value.totalReactedCount}}</span>
+                </span>
+                <button style='outline: none;' ng-click="openReactionsContainer(commentId)" class="btn btn-success">React</button>
+                <span class="reactionsContainer" id="reactionsContainer-{{commentId}}">
+                    <span class="reaction tooltipcontrol" ng-click="toggleTriggerReaction(commentId, key, value.contentReactionId, false)" id="content-{{commentId}}-react-{{key}}" data-reaction="{{value.name}}" ng-repeat="(key, value) in comment_value.contentReactions" on-finish-render="ngRepeatCommentFinished">
+                        <span class="tooltiptext">
+                            {{value.name}}
+                        </span>
+                        <span>
+                            {{value.emoji}}
+                        </span>
+                    </span>
+                </span>
+            </div>
+        <div>
     </div>
-    <div class="form-group">
-        <label for="Vendor">Vendor</label>
-        <input type="text" ng-model="editrecord.vendor" name="Vendor" id="Vendor" class="form-control" required />
-        <span ng-show="form.Vendor.$dirty && form.Vendor.$error.required" class="help-block">Vendor is required</span>
+
+    <div class="centerContainer">
+        <div class="absoluteCenter">
+            <div id="contentReactionsPopup">
+                <div id="popupHeader">
+                    <span class="reactorsControl" id="reactors-control-All" ng-click="getReactedUsersPopup('All')">
+                        All
+                    </span>
+                    <span class="reactorsControl" ng-show="value.count" id="reactors-control-{{key}}" ng-click='getReactedUsersPopup(key)' ng-repeat="(key, value) in popupContentReactions">
+                         {{value.emoji}} {{value.count}}
+                    </span>     
+                </div>
+                <div class='popupReactorsRegion'>
+                    <div class="reactorsSection popupAllReactors">
+                        <div class='popupReactors' ng-show="1" ng-repeat="(key, value) in currentContentAllReactors">
+                            <img src="{{value.avatar}}" class='avatar'>
+                            </img>
+                            <span class="emoji">{{value.emoji}}</span>
+                            <span>
+                                {{value.first_name}} {{value.last_name}}
+                            </span>
+                        </div>
+                    </div>
+                    <div class="reactorsSection popupReactor-{{reactionKey}}" ng-repeat="(reactionKey, value) in popupContentReactions">
+                        <div class="popupReactors"  ng-repeat="(key, value) in value.reactedUsers">
+                            <img src="{{value.avatar}}" class='avatar'>
+                            </img>
+                            <span class="emoji">{{value.emoji}}</span>
+                            <span>
+                                {{value.first_name}} {{value.last_name}}
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
-    <div class="form-group">
-        <label for="MRP">MRP</label>
-        <input type="text" ng-model="editrecord.mrp" name="MRP" id="MRP" class="form-control" required />
-        <span ng-show="form.MRP.$dirty && form.MRP.$error.required" class="help-block">MRP is required</span>
-    </div>
-    <div class="form-group">
-        <label for="BatchNum">Batch Num</label>
-        <input type="text" ng-model="editrecord.batchnum" name="BatchNum" id="BatchNum" class="form-control" required />
-        <span ng-show="form.BatchNum.$dirty && form.BatchNum.$error.required" class="help-block">Batch Num is required</span>
-    </div>
-    <div class="form-group">
-        <label for="BatchDate">Batch Date</label>
-        <input type="text" ng-model="editrecord.batchdate" name="BatchDate" placeholder="MM/DD/YYYY format" id="BatchDate" class="form-control" required />
-        <span ng-show="form.BatchDate.$dirty && form.BatchDate.$error.required" class="help-block">Batch Date is required</span>
-    </div>
-    <div class="form-group">
-        <label for="Quantity">Quantity</label>
-        <input type="text" ng-model="editrecord.quantity" name="Quantity" id="Quantity" class="form-control" required />
-        <span ng-show="form.Quantity.$dirty && form.Quantity.$error.required" class="help-block">Quantity is required</span>
-    </div>
-    <div class="form-actions">
-        <button type="submit" ng-disabled="form.$invalid || dataLoading" class="btn btn-danger">Save</button>
-        <button ng-click="cancel()" class="btn btn-danger">Cancel</button>
-        <img ng-if="dataLoading" src="data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA=="/>
-    </div>
-</form>
+</div>

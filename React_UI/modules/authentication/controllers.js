@@ -1,7 +1,7 @@
 'use strict';
  
 angular.module('Authentication')
- 
+
 .controller('LoginController',
     ['$scope', '$rootScope', '$location', 'AuthenticationService',
     function ($scope, $rootScope, $location, AuthenticationService) {

@@ -1,20 +1,32 @@
 <div align="right">
 <span ng-show="globals.currentUser.manager">
 
-<i class="action" ng-click="approvetransition()"> Approve Inventories </i> | </span>
-<i class="action" ng-click="dashboardtransition()">{{globals.currentUser.username}} Dashboard </i>|
+<!-- <i class="action" ng-click="approvetransition()"> Approve Inventories </i> | </span>
+<i class="action" ng-click="dashboardtransition()">{{globals.currentUser.username}} Dashboard </i>| -->
 <i class="action" ng-click="logouttransition()"> Logout</i>
 </div>
 <div ng-show="dataLoading" class="alert alert-danger">{{error}}</div>
 
-<i class="action" ng-disabled="dataLoading" ng-click="addtransition(inv)">Add Inventory</i>
+<i class="action" ng-disabled="dataLoading" ng-click="addtransition(inv)">Create Post</i>
 
-<div ng-show="approvedinv[0]" class="alert alert-info">
-    <center><b>Approved Inventories</b></center>
+<div ng-show="approvedinv[0]" class="title alert alert-info">
+    <center><b>Available Posts</b></center>
 </div>
-<div ng-show="!loading && !approvedinv[0]" class="alert alert-danger"><center>No Approved Inventories present in the store</center></div>
+<div ng-show="!loading && !approvedinv[0]" class="alert alert-danger"><center>No available posts</center></div>
 
-<table ng-show="approvedinv[0]" class="table">
+
+<div ng-show="approvedinv[0]" id="postsContainer">
+	<div class="post" ng-repeat="inv in approvedinv">
+		<div class='title' align="center">{{inv.productname}}</div>
+		<div class='message' align="center">{{inv.vendor}}</div>
+		<div align="center">
+			<i class="action" ng-disabled="dataLoading" ng-click="edittransition(inv)">edit</i> / <i class="action" class="material-icons action" ng-disabled="dataLoading" ng-click="delete(inv.id)">delete</i>
+		</div>
+	</div>
+</div>
+
+
+<!-- <table ng-show="approvedinv[0]" class="table">
 <thead style="font-size: 150%;"><b><td align="center">Product Id</td><td align="center">Product Name</td><td align="center">Vendor</td><td align="center">MRP</td><td align="center">Batch Num</td><td align="center">Batch Date</td><td align="center">Quantity</td><td></td></b></thead>
 	<tr ng-repeat="inv in approvedinv">
 		<td align="center">{{inv.productid}}</td>
@@ -45,4 +57,4 @@
 		<td align="center">{{inv.quantity}}</td>
 		<td align="center"><i class="action" ng-disabled="dataLoading" ng-click="edittransition(inv)">edit</i> / <i class="action" class="material-icons action" ng-disabled="dataLoading" ng-click="delete(inv.id)">delete</i></td>
 	 </tr>
- </table>
+ </table> -->

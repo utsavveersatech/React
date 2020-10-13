@@ -104,6 +104,7 @@ GEM
     nio4r (2.3.1)
     nokogiri (1.10.1-x86-mingw32)
       mini_portile2 (~> 2.4.0)
+    pg (1.2.3-x86-mingw32)
     puma (3.12.0)
     rack (2.0.6)
     rack-cors (1.0.2)
@@ -193,6 +194,7 @@ DEPENDENCIES
   coffee-script-source (= 1.8.0)
   faker
   mysql2
+  pg
   puma (~> 3.7)
   rack-cors
   rails (~> 5.1.6, >= 5.1.6.1)
@@ -201,4 +203,4 @@ DEPENDENCIES
   tzinfo-data
 
 BUNDLED WITH
-   2.0.1
+   2.1.4

@@ -2,15 +2,18 @@
 
 // declare modules
 angular.module('Authentication', []);
-angular.module('Home', []);
 
+angular.module('onFinishRender', []);
+angular.module('Helpers', []);
+
+angular.module('Home', ['Helpers']);
 angular.module('SIMApp', [
     'Authentication',
     'Home',
     'ngRoute',
     'ngCookies'
 ])
- 
+
 .config(['$routeProvider', function ($routeProvider) {
 
     $routeProvider
@@ -23,17 +26,6 @@ angular.module('SIMApp', [
             controller: 'DashboardController',
             templateUrl: 'modules/home/views/dashboard.html'
         })
-        .when('/approve', {
-            resolve : {
-                "check": function($location, $rootScope) {
-                    if(!$rootScope.globals.currentUser.manager) {
-                        $location.path('/login');
-                    }
-                }
-            },
-            controller: 'ApproveController',
-            templateUrl: 'modules/home/views/approvalboard.html'
-        })
         .when('/add', {
             controller: 'AddInventoryController',
             templateUrl: 'modules/home/views/addinventory.html'
@@ -44,13 +36,13 @@ angular.module('SIMApp', [
         })
         .otherwise({ redirectTo: '/login' });
 }])
- 
+
 .run(['$rootScope', '$location', '$cookieStore', '$http',
     function ($rootScope, $location, $cookieStore, $http) {
         // keep user logged in after page refresh
         $rootScope.globals = $cookieStore.get('globals') || {};
         if ($rootScope.globals.currentUser) {
-            $http.defaults.headers.common['Authorization'] = 'Basic ' + $rootScope.globals.currentUser.authdata; // jshint ignore:line
+            $http.defaults.headers.common['Authorization'] = 'Basic ' + $rootScope.globals.currentUser.authdata;
         }
  
         $rootScope.$on('$locationChangeStart', function (event, next, current) {
