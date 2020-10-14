@@ -200,6 +200,7 @@ angular.module('Home')
 	        		$scope.currentContentAllReactors = {};
 					Helpers.getReactedUsers($scope.popupcontentId, null, function(response) {
 						$scope.currentContentAllReactors = response;
+						$(".reactorsSection").hide();
 		       			$(".popupAllReactors").show();
 	        		});   			
         		}
@@ -211,6 +212,7 @@ angular.module('Home')
         		if(Object.keys($scope.popupContentReactions[key].reactedUsers).length === 0) {
         			Helpers.getReactedUsers($scope.popupcontentId, key, function(response) {
 						$scope.popupContentReactions[key].reactedUsers = response;
+						$(".reactorsSection").hide();
 		       			$(".popupReactor-"+key).show();
 	        		});
         		}
