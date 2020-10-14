@@ -120,13 +120,13 @@ angular.module('Home')
       	else {
       		$scope.reactedUsers = {};
       		$rootScope.globals.currentUser.userId = 1;
-	      	$scope.contentId = $rootScope.editrecord.productname; // $scope.contentId = 1;
+	      	$scope.contentId = 1; // $rootScope.editrecord.productname;
 	      	$scope.contents = {
 	      						'2': {content: 'static comment 1', author_id: 2, author: 'User 2', contentId : '2'},
 	      					    '3': {content: 'static comment 2', author_id: 1, author: 'User 1 again', contentId : '3'}
 	      					};
 
-	      	// post reactions
+	      	// load post reactions
 	        Helpers.getContentReactions($scope.contentId, function(contentReactions, totalReactedCount) {
 	        	$scope.contentReactions = contentReactions;
 	        	$scope.totalReactedCount = totalReactedCount;
@@ -140,7 +140,7 @@ angular.module('Home')
 				});
 	        });
 
-	        // comment reactions
+	        // load comment reactions
 			Object.keys($scope.contents).forEach(function(key) {
 		        Helpers.getContentReactions(key, function(contentReactions, totalReactedCount) {
 		        	$scope.contents[key].contentReactions = contentReactions;
@@ -225,55 +225,35 @@ angular.module('Home')
         	$('#dimmer').css('display', 'block');
         	$('#contentReactionsPopup').addClass('display');
         	$scope.popupcontentId = contentId;
-        	if(isPost) {
-	        	$scope.popupContentReactions = $scope.contentReactions; // $scope.popupContentReactions = Object.assign({}, $scope.contentReactions);
-        	}
-        	else {
-        		$scope.popupContentReactions = $scope.contents[contentId].contentReactions; // $scope.popupContentReactions = Object.assign({}, $scope.contents[contentId].contentReactions);
-        		
-        	}
-
+        	$scope.popupContentReactions = isPost ? $scope.contentReactions : $scope.contents[contentId].contentReactions;
+        	// $scope.popupContentReactions = isPost ? Object.assign({}, $scope.contentReactions) : Object.assign({}, $scope.contents[contentId].contentReactions);
         	$scope.getReactedUsersPopup('All', $scope.popupContentReactions);
         };
 
         $scope.toggleTriggerReaction = function (contentId, reactionId, contentReactionId, isPost=false) {
-	        Helpers.triggerReaction(contentId, reactionId, contentReactionId, $rootScope.globals.currentUser.userId, function(id) {
-	        	let contentReactions;
-	        	if(isPost) {
-	        		contentReactions = $scope.contentReactions;
-	        	}
-	        	else {
-	        		contentReactions = $scope.contents[contentId].contentReactions;
-	        	}
-	        	if(id) {
-	        		contentReactions[reactionId].contentReactionId = id;
-	        		contentReactions[reactionId].reactedUsers[$rootScope.globals.currentUser.userId] =  $rootScope.globals.currentUser.userList[0];
-	        		contentReactions[reactionId].currUserReacted = 1;
-	        		contentReactions[reactionId].count++;
-	        		
-	        		if(isPost){
-	        			$scope.totalReactedCount++;
-	        		}
-	        		else{
-	        			$scope.contents[contentId].totalReactedCount++;
-	        		}
-	        		
-	        		$('#content-'+contentId+'-react-'+reactionId).addClass('selected');
-	        	}
-	        	else {
-	        		delete contentReactions[reactionId].contentReactionId;
-	        		delete contentReactions[reactionId].reactedUsers[$rootScope.globals.currentUser.userId];
-	        		contentReactions[reactionId].currUserReacted = 0;
-	        		contentReactions[reactionId].count--;
-	        		if(isPost){
-	        			$scope.totalReactedCount--;
-	        		}
-	        		else{
-	        			$scope.contents[contentId].totalReactedCount--;
-	        		}
-	        		$('#content-'+contentId+'-react-'+reactionId).removeClass('selected');
-	        	}
-	        });
+        	if(!$scope.dataLoading) {
+	        	$scope.dataLoading = true;
+		        Helpers.triggerReaction(contentId, reactionId, contentReactionId, $rootScope.globals.currentUser.userId, function(id) {
+		        	let contentReactions = isPost ? $scope.contentReactions : $scope.contents[contentId].contentReactions;
+		        	if(id) {
+		        		contentReactions[reactionId].contentReactionId = id;
+		        		contentReactions[reactionId].reactedUsers[$rootScope.globals.currentUser.userId] =  $rootScope.globals.currentUser.userList[0];
+		        		contentReactions[reactionId].currUserReacted = 1;
+		        		contentReactions[reactionId].count++;
+		        		isPost ? $scope.totalReactedCount++ : $scope.contents[contentId].totalReactedCount++;		
+		        		$('#content-'+contentId+'-react-'+reactionId).addClass('selected');
+		        	}
+		        	else {
+		        		delete contentReactions[reactionId].contentReactionId;
+		        		delete contentReactions[reactionId].reactedUsers[$rootScope.globals.currentUser.userId];
+		        		contentReactions[reactionId].currUserReacted = 0;
+		        		contentReactions[reactionId].count--;
+		        		isPost ? $scope.totalReactedCount-- : $scope.contents[contentId].totalReactedCount--;
+		        		$('#content-'+contentId+'-react-'+reactionId).removeClass('selected');
+		        	}
+		        	$scope.dataLoading = false;
+		        });
+        	}
         };
 
     	$scope.logouttransition = Helpers.logouttransition;
@@ -288,7 +268,6 @@ angular.module('Home')
 				vendor: $rootScope.editrecord.vendor,
 			}).success(function (response) {
                    if(response.success) {
-
 	                    $location.path('/');
 	                } else {
 	                    $scope.error = response.message;

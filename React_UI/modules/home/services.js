@@ -83,11 +83,9 @@ angular.module('Helpers')
             $http.get(requestUrl)
                .success(function (response) {
                     let userContentReactions = response;
-                    console.log("userContentReactions", userContentReactions)
                     let reactedUserList = new Object();
                     $rootScope.userList.forEach(function(user) {
                         userContentReactions.forEach(function(contentReaction) {
-                            console.log("inside.....")
                             if(contentReaction.user_id == user.id) {
                                 reactedUserList[user.id] = user;
                             }
@@ -101,15 +99,12 @@ angular.module('Helpers')
             if(contentReactionId && $('#content-'+contentId+'-react-'+reactionId).hasClass('selected')) {
                 $http.delete($rootScope.serverUrl+'user_content_reactions/'+ contentReactionId)
                    .success(function (response) {
-                        console.log("deleted",response);
                         callback();
                    });
             }
             else {
                 $http.post($rootScope.serverUrl+'user_content_reactions?id=', {content_id: contentId, reaction_id: reactionId, user_id: userId})
-                   .success(function (response) {
-                        console.log("added",response);
-                        
+                   .success(function (response) {                        
                         callback(response.id);
                    });
             }

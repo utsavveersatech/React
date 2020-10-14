@@ -1,0 +1,139 @@
+.post-view {
+  /*    @media only screen and (max-width: 600px) {
+        min-width: 250px;
+      }
+  
+    @media only screen and (max-width: 6000px) {
+      background-color: lightblue;
+    }*/ }
+  .post-view .post-actions {
+    margin-bottom: 20px; }
+  .post-view label {
+    font-size: 14px; }
+  .post-view textarea {
+    height: 200px;
+    resize: none; }
+  .post-view .contentReactionsContainer {
+    vertical-align: middle;
+    height: 32px;
+    display: inline-block;
+    background: #161616;
+    padding-left: 8px;
+    padding-right: 8px;
+    border-radius: 24px;
+    -webkit-border-radius: 24px;
+    -moz-border-radius: 24px; }
+    .post-view .contentReactionsContainer .contentReaction {
+      font-size: 16px;
+      margin-left: -4px;
+      margin-right: -4px;
+      top: 4px; }
+      .post-view .contentReactionsContainer .contentReaction .tooltiptext {
+        top: 25px;
+        bottom: unset;
+        height: unset;
+        background: gray;
+        color: #161616;
+        border-radius: 10px;
+        -webkit-border-radius: 10px;
+        -moz-border-radius: 10px;
+        line-height: 1.5; }
+    .post-view .contentReactionsContainer .totalReactedCount {
+      position: relative;
+      color: #FFFFFF;
+      cursor: pointer;
+      top: 4px; }
+  .post-view .reactionsContainer {
+    position: relative;
+    top: 35px;
+    left: -10px;
+    height: 32px;
+    border-radius: 24px;
+    -webkit-border-radius: 24px;
+    -moz-border-radius: 24px;
+    background-color: #FFFFFF;
+    width: auto;
+    z-index: 99999;
+    display: none; }
+    .post-view .reactionsContainer .reaction {
+      font-size: 16px;
+      margin-right: 8px;
+      margin-left: 8px;
+      cursor: pointer;
+      line-height: 30px; }
+    .post-view .reactionsContainer .reaction:first-of-type {
+      margin-left: 20px; }
+    .post-view .reactionsContainer .reaction:last-of-type {
+      margin-right: 20px; }
+    .post-view .reactionsContainer .reaction:hover {
+      font-size: 32px;
+      line-height: 0px; }
+    .post-view .reactionsContainer .reaction.selected {
+      font-size: 32px;
+      line-height: 0px; }
+  .post-view .reactionsContainer.display {
+    display: inline-block; }
+  .post-view .commentContainer {
+    margin-top: 20px; }
+    .post-view .commentContainer .comment {
+      height: 70px;
+      width: 100%;
+      margin-bottom: 10px; }
+  .post-view #contentReactionsPopup {
+    position: absolute;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    bottom: 0px;
+    width: 500px;
+    height: 400px;
+    padding-left: 10px;
+    padding-right: 10px;
+    border-radius: 5px;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    background-color: #161616;
+    z-index: 99999;
+    display: none; }
+    .post-view #contentReactionsPopup #popupHeader {
+      display: flex;
+      flex-direction: row;
+      height: 40px;
+      overflow-x: auto;
+      justify-content: space-around;
+      border-bottom: 1px solid gray;
+      margin-top: 5px;
+      width: auto; }
+      .post-view #contentReactionsPopup #popupHeader .reactorsControl {
+        cursor: pointer;
+        max-width: 60px;
+        color: #FFFFFF;
+        margin-top: 10px;
+        padding-left: 5px;
+        padding-right: 5px; }
+      .post-view #contentReactionsPopup #popupHeader .reactorsControl.selected {
+        color: mediumblue;
+        border-bottom: 2px solid mediumblue; }
+    .post-view #contentReactionsPopup .popupReactorsRegion {
+      color: #FFFFFF;
+      height: 345px;
+      overflow: auto; }
+      .post-view #contentReactionsPopup .popupReactorsRegion .popupReactors {
+        margin-top: 5px;
+        margin-bottom: 5px; }
+        .post-view #contentReactionsPopup .popupReactorsRegion .popupReactors .avatar {
+          position: relative;
+          width: 40px;
+          height: 40px;
+          border-radius: 140px;
+          -webkit-border-radius: 140px;
+          -moz-border-radius: 140px;
+          margin-right: 20px; }
+        .post-view #contentReactionsPopup .popupReactorsRegion .popupReactors .emoji {
+          font-size: 12px;
+          position: relative; }
+  .post-view #contentReactionsPopup.display {
+    display: block; }
+
+/*# sourceMappingURL=post.css.map */

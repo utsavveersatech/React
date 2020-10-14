@@ -26,42 +26,40 @@
         </div>
     </form>
     <div class="reactionsReact">
-        <div>
-           <span ng-show="totalReactedCount" class="contentReactionsContainer">
-                <span class="contentReaction tooltipcontrol" ng-show="value.count != 0" ng-mouseleave="hideToolTip()" ng-mouseover='getReactedUsers(contentId, key, true)' id="control-content-{{contentId}}-react-{{key}}" ng-repeat="(key, value) in contentReactions">
-                    <span class="tooltiptext" id="tooltip-content-{{contentId}}-react-{{key}}">
-                        <div>
-                            <b>
-                                {{value.name}}
-                            </b>
-                            <div ng-repeat="(key, value) in value.reactedUsers">
-                                {{value.first_name}} {{value.last_name}}
-                            </div>
+       <span ng-show="totalReactedCount" class="contentReactionsContainer">
+            <span class="contentReaction tooltipcontrol" ng-show="value.count != 0" ng-mouseleave="hideToolTip()" ng-mouseover='getReactedUsers(contentId, key, true)' id="control-content-{{contentId}}-react-{{key}}" ng-repeat="(key, value) in contentReactions">
+                <span class="tooltiptext" id="tooltip-content-{{contentId}}-react-{{key}}">
+                    <div>
+                        <b>
+                            {{value.name}}
+                        </b>
+                        <div ng-repeat="(key, value) in value.reactedUsers">
+                            {{value.first_name}} {{value.last_name}}
                         </div>
-                    </span>
-                    <span>
-                        {{value.emoji}}
-                    </span>
+                    </div>
                 </span>
-                <span class="totalReactedCount" ng-click="openContentReactionsPopup(contentId, true)">{{totalReactedCount}}</span>
-            </span>
-            <button style='outline: none;' ng-click="openReactionsContainer(contentId)" class="btn btn-success">React</button>
-            <span class="reactionsContainer" id="reactionsContainer-{{contentId}}">
-                <span class="reaction tooltipcontrol" ng-click="toggleTriggerReaction(contentId, key, value.contentReactionId, true)" id="content-{{contentId}}-react-{{key}}" ng-repeat="(key, value) in contentReactions" on-finish-render="ngRepeatFinished">
-                    <iframe  style="display: none; width: 0; height: 0"/>
-                    <span class="tooltiptext">
-                        {{value.name}}
-                    </span>
-                    <span>
-                        {{value.emoji}}
-                    </span>
+                <span>
+                    {{value.emoji}}
                 </span>
             </span>
-        </div>
+            <span class="totalReactedCount" ng-click="openContentReactionsPopup(contentId, true)">{{totalReactedCount}}</span>
+        </span>
+        <button style='outline: none;' ng-click="openReactionsContainer(contentId)" class="btn btn-success">React</button>
+        <span class="reactionsContainer" id="reactionsContainer-{{contentId}}">
+            <span class="reaction tooltipcontrol" ng-click="toggleTriggerReaction(contentId, key, value.contentReactionId, true)" id="content-{{contentId}}-react-{{key}}" ng-repeat="(key, value) in contentReactions" on-finish-render="ngRepeatFinished">
+                <iframe  style="display: none; width: 0; height: 0"/>
+                <span class="tooltiptext">
+                    {{value.name}}
+                </span>
+                <span>
+                    {{value.emoji}}
+                </span>
+            </span>
+        </span>
     </div>
     <div class="commentContainer" ng-repeat="(commentId, comment_value) in contents">
         <label for="Vendor">{{comment_value.author}}</label>
-        <textarea class="comment" ng-model="comment_value.content" name="Vendor" id="Vendor" class="form-control" required />
+        <textarea class="comment form-control" ng-model="comment_value.content" name="Vendor" id="Vendor" required />
 
         <div class="reactionsReact">
             <div>
@@ -95,7 +93,7 @@
                     </span>
                 </span>
             </div>
-        <div>
+        </div>
     </div>
 
     <div class="centerContainer">
