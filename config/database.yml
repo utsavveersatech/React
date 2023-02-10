@@ -12,9 +12,9 @@ default: &default
 development:
   <<: *default
   encoding: unicode
-  database: postgres
+  database: users
   username: postgres
-  password: 1234
+  password: password
 
 # Warning: The database defined as "test" will be erased and
 # re-generated from your development database when you run "rake".
