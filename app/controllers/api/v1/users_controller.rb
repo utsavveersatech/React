@@ -4,8 +4,8 @@ module Api
 			def search
 				user = User.find_by_username(params[:username])
 				if(user)
-					userroles = Userrole.where("userid = ?", user.id).order(:roleid).limit(1)
-					@role = Role.find_by_id(userroles[0].roleid)
+					userroles = Userrole.where("user_id = ?", user.id).order(:role_id).limit(1)
+					@role = Role.find_by_id(userroles[0].role_id)
 				end
 
 			   if (user && user.password == params[:password])
