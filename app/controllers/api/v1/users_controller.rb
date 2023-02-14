@@ -24,6 +24,17 @@ module Api
 				user1 = User.find(params[:id])
 				render json: {user: user1}
 			end
+
+			def content_reaction
+				inv=Inventory.find(params[:content_id])
+				render json: {reactions: inv.reactions}
+			end
+
+			def reactions
+				rec = Reaction.all
+				render json: {reactions: rec}
+			end
+
 		end
 	end
 end
