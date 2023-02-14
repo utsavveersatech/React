@@ -14,6 +14,16 @@ module Api
 			      render json: {success: 0, message: 'Username or password is incorrect'}, status: :ok
 			   end
 			end
+
+			def index
+				user = User.all
+				render json: {users: user}
+			end
+
+			def show
+				user1 = User.find(params[:id])
+				render json: {user: user1}
+			end
 		end
 	end
 end
