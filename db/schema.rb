@@ -10,10 +10,19 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2023_02_14_150039) do
+ActiveRecord::Schema.define(version: 2023_02_16_170540) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "comments", force: :cascade do |t|
+    t.string "comment"
+    t.integer "user_id"
+    t.integer "inventory_id"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.string "username"
+  end
 
   create_table "inventories", force: :cascade do |t|
     t.string "productid"
@@ -30,17 +39,9 @@ ActiveRecord::Schema.define(version: 2023_02_14_150039) do
     t.datetime "updated_at", null: false
   end
 
-  create_table "inventoryreactions", force: :cascade do |t|
-    t.integer "reaction_id"
-    t.integer "inventory_id"
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
-  end
-
   create_table "reactions", force: :cascade do |t|
     t.string "emoji"
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
+    t.integer "user_id"
   end
 
   create_table "roles", force: :cascade do |t|
@@ -48,6 +49,14 @@ ActiveRecord::Schema.define(version: 2023_02_14_150039) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["name"], name: "index_roles_on_name", unique: true
+  end
+
+  create_table "usercontentreactions", force: :cascade do |t|
+    t.integer "reaction_id"
+    t.integer "inventory_id"
+    t.integer "user_id"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
   end
 
   create_table "userroles", force: :cascade do |t|

@@ -1,4 +1,5 @@
 class Reaction < ApplicationRecord
-    has_many :inventoryreactions
-    has_many :inventories, through: :inventoryreactions
+	has_many :usercontentreactions
+	has_many :users, through: :usercontentreactions
+	has_many :inventories, through: :usercontentreactions
 end
