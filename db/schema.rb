@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2023_02_16_170540) do
+ActiveRecord::Schema.define(version: 2023_02_17_085009) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -53,10 +53,11 @@ ActiveRecord::Schema.define(version: 2023_02_16_170540) do
 
   create_table "usercontentreactions", force: :cascade do |t|
     t.integer "reaction_id"
-    t.integer "inventory_id"
+    t.integer "parent_element_id"
     t.integer "user_id"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.string "parent_element"
   end
 
   create_table "userroles", force: :cascade do |t|

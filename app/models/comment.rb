@@ -1,4 +1,5 @@
 class Comment < ApplicationRecord
+    has_many :usercontentreactions, as: :content 
     belongs_to :user
     belongs_to :inventory
     validates :comment, presence: true

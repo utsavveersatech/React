@@ -2,9 +2,31 @@ module Api
 	module V1
 		class CommentsController < ApplicationController
 
+			# def show_comments
+			# 	comments = Comment.where(inventory_id: params[:inventory_id])
+			# 	# byebug
+			# 	# reactions = comments.usercontentreactions.map{ |ucr| ucr.reaction.id}
+			# 	render json: {comments: comments}
+			# end
+
 			def show_comments
 				comments = Comment.where(inventory_id: params[:inventory_id])
-				render json: {comments: comments}
+				# reactions = comments.map{ |comment| comment.usercontentreactions.map{ |ucr| }}
+				data = []
+				for comment in comments
+					reaction = []
+					for ucr in comment.usercontentreactions
+						reaction.append(ucr.reaction.id)
+					end
+					data.append({comment: comment, reaction: reaction})
+				end
+				render json: {comments: data}
+			end
+
+			def comment_reaction
+				comment = Comment.find(params[:comment_id])
+				reactions = comment.usercontentreactions.map { |ucr| {id: ucr.reaction.id, emoji: ucr.reaction.emoji, user_id: ucr.user_id} }
+				render json: {reactions: reactions}
 			end
 
 			def create_comments

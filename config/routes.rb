@@ -16,6 +16,7 @@ Rails.application.routes.draw do
 			post '/comments/new', to: "comments#create_comments"
 			put 'editComments', to: "comments#edit_comments"
 			get 'reactions', to: "users#reactions"
+			get '/comment_reactions', to: "comments#comment_reaction"
 		end
 	end
 end

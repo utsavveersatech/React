@@ -28,7 +28,8 @@ module Api
 
 			def content_reaction
 				inv=Inventory.find(params[:content_id])
-				render json: {reactions: inv.reactions}
+				reactions = inv.usercontentreactions.map { |ucr| {id: ucr.reaction.id, emoji: ucr.reaction.emoji, user_id: ucr.user_id} }
+				render json: {reactions: reactions}
 			end
 
 			def reactions
@@ -37,13 +38,21 @@ module Api
 			end
 
 			def save_content_reaction
-				user_content_reaction = Usercontentreaction.new(user_id: params[:user_id], inventory_id: params[:content_id], reaction_id: params[:reaction_id])
-				user_content_reaction.save
+				user_content_reaction = Usercontentreaction.new(user_id: params[:user_id], content_id: params[:content_id], reaction_id: params[:reaction_id], content_type: params[:content_type])
+				if user_content_reaction.save
+					render json: {success: 1, reaction: user_content_reaction}
+				else
+					render json: {success: 0, message: "some error occured"}
+				end
 			end
 
 			def delete_content_reaction
-				user = Usercontentreaction.where(["user_id = ? AND reaction_id = ? AND inventory_id = ?", params[:user_id], params[:reaction_id], params[:content_id]])
-				Usercontentreaction.find_by(id: user.ids[0]).destroy
+				user = Usercontentreaction.where(["user_id = ? AND reaction_id = ? AND content_id = ? AND content_type = ?", params[:user_id], params[:reaction_id], params[:content_id], params[:content_type]])
+				if Usercontentreaction.find_by(id: user.ids[0]).destroy
+					render json: {success: 1, message: "reaction deleted successfully"}, status: :ok
+				else
+					render json: {success: 0, message: "reaction can't be deleted"}, status: :ok
+				end
 			end
 
 		end
