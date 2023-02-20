@@ -49,7 +49,7 @@
             <span class="reaction tooltipcontrol" ng-click="toggleTriggerReaction(contentId, key, value.contentReactionId, true)" id="content-{{contentId}}-react-{{key}}" ng-repeat="(key, value) in contentReactions" on-finish-render="ngRepeatFinished">
                 <iframe  style="display: none; width: 0; height: 0"/>
                 <span class="tooltiptext">
-                    {{value.name}}
+                    {{value.name}}&nbsp;
                 </span>
                 <span>
                     {{value.emoji}}
@@ -57,7 +57,73 @@
             </span>
         </span>
     </div>
-    <div class="commentContainer" ng-repeat="(commentId, comment_value) in contents">
+
+    <div class="newCommentContainer">
+        <p>Comment</7p>
+        <textarea class="new-comment" ng-model="newCommentValue" />
+        <button class="save-new-comment" ng-click="saveNewComment(newCommentValue)">Save</button>
+    </div>
+
+    <div class="commentContainer" ng-repeat="(commentId, comment_value) in contents.comm">
+        <label class="comments-username">{{comment_value.comment.username}}</label>
+        <textarea class="comment form-control" ng-model="comment_value.comment.comment" name="Vendor" id="Vendor" required ng-disabled="globals.currentUser.userId != comment_value.comment.user_id" />
+        <div class="comments-options" style="display: flex">
+            <div class="restricted_buttons" style="margin-right: 0.5rem;" ng-show="globals.currentUser.userId == comment_value.comment.user_id">
+                
+                <button class="delete_comments" ng-click="editComments(comment_value.comment.id, comment_value.comment.comment)">Save</button>
+                <button class="delete_comments" ng-click="deleteComments(comment_value.comment.id)">Delete</button>
+                
+            </div>  
+            <button class="delete_comments" ng-click="openCommentsReactionsContainer(comment_value.comment.id)"><b>{{comment_value.reaction.length}}</b> React</button>
+            <span class="reactionsContainer" id="commentsReactionsContainer-{{comment_value.comment.id}}">
+                <span class="reaction tooltipcontrol" ng-click="toggleCommentTriggerReaction(comment_value.comment.id, key, value.commentReactionId, false)" id="content-{{comment_value.comment.id}}-react-{{key}}" ng-repeat="(key, value) in commentReactions" on-finish-render="ngRepeatFinished">
+                    <iframe  style="display: none; width: 0; height: 0"/>
+                    <span class="tooltiptext">
+                        {{value.name}}
+                    </span>
+                    <span>
+                        {{value.emoji}}
+                    </span>
+                </span>
+            </span>
+        </div>
+
+        <!-- <div class="reactionsReact">
+            <div>
+               <span ng-show="comment_value.totalReactedCount" class="contentReactionsContainer">
+                    <span ng-show="value.count != 0" class="contentReaction tooltipcontrol" id="control-content-{{commentId}}-react-{{key}}" ng-mouseleave="hideToolTip(commentId)" ng-mouseover='getReactedUsers(commentId, key, false)' ng-repeat="(key, value) in comment_value.contentReactions">
+                        <span class="tooltiptext" id="tooltip-content-{{commentId}}-react-{{key}}">
+                            <div>
+                                <b>
+                                    {{value.name}}
+                                </b>
+                                <div ng-repeat="(key, value) in value.reactedUsers">
+                                    {{value.first_name}} {{value.last_name}}
+                                </div>
+                            </div>
+                        </span>
+                        <span>
+                            {{value.emoji}}
+                        </span>
+                    </span>
+                    <span class="totalReactedCount" ng-click="openContentReactionsPopup(commentId)">{{comment_value.totalReactedCount}}</span>
+                </span>
+                <button style='outline: none;' ng-click="openReactionsContainer(commentId)" class="btn btn-success">React</button>
+                <span class="reactionsContainer" id="reactionsContainer-{{commentId}}">
+                    <span class="reaction tooltipcontrol" ng-click="toggleTriggerReaction(commentId, key, value.contentReactionId, false)" id="content-{{commentId}}-react-{{key}}" data-reaction="{{value.name}}" ng-repeat="(key, value) in comment_value.contentReactions" on-finish-render="ngRepeatCommentFinished">
+                        <span class="tooltiptext">
+                            {{value.name}}
+                        </span>
+                        <span>
+                            {{value.emoji}}
+                        </span>
+                    </span>
+                </span>
+            </div>
+        </div> -->
+    </div>
+
+    <!-- <div class="commentContainer" ng-repeat="(commentId, comment_value) in contents">
         <label for="Vendor">{{comment_value.author}}</label>
         <textarea class="comment form-control" ng-model="comment_value.content" name="Vendor" id="Vendor" required />
 
@@ -94,7 +160,8 @@
                 </span>
             </div>
         </div>
-    </div>
+    </div> -->
+    
 
     <div class="centerContainer">
         <div class="absoluteCenter">

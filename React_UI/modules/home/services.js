@@ -37,10 +37,31 @@ angular.module('Helpers')
             }
         };
 
+        helper.getComments = function(inv_id,callback){
+            $http.get($rootScope.serverUrl+'comments?inventory_id=' + inv_id)
+            .success(function (response) {
+                callback(response);
+            });
+        }
+
+        helper.editComments = function(comment_id, comment, callback){
+            $http.put($rootScope.serverUrl+'editComments', {
+                content: comment,
+                comment_id: comment_id
+            }).success(function(response){
+                callback(response)
+            })
+        }
+
+        helper.deleteComments = function(comment_id,callback){
+            $http.delete($rootScope.serverUrl+'comments?comment_id=' + comment_id)
+            .success(function (response) {
+                callback(response);
+            });
+        }
         helper._getContentReactions = function (userContentReactions, callback) {
             let createdReactions = new Object();
-
-            $rootScope.reactionsList.forEach(function(reaction) {
+            $rootScope.reactionsList.reactions.forEach(function(reaction) {
                 createdReactions[reaction.id] = {emoji: reaction.emoji, currUserReacted: 0,
                                                     name: reaction.name, count: 0, reactedUsers: {}
                                                 }
@@ -48,11 +69,31 @@ angular.module('Helpers')
 
             let totalReactedCount = 0;
             userContentReactions.forEach(function(contentReaction) {
-                totalReactedCount++;
-                 createdReactions[contentReaction.reaction_id].count++;
+                 createdReactions[contentReaction.id].count++;
+                 totalReactedCount++;
                  if(contentReaction.user_id == $rootScope.globals.currentUser.userId) {
-                    createdReactions[contentReaction.reaction_id].currUserReacted = 1;
-                    createdReactions[contentReaction.reaction_id].contentReactionId = contentReaction.id;
+                    createdReactions[contentReaction.id].currUserReacted = 1;
+                    createdReactions[contentReaction.id].contentReactionId = contentReaction.id;
+                 }
+            });
+            callback(createdReactions, totalReactedCount);
+        };
+
+        helper._getCommentReactions = function (userCommentReactions, callback) {
+            let createdReactions = new Object();
+            $rootScope.reactionsList.reactions.forEach(function(reaction) {
+                createdReactions[reaction.id] = {emoji: reaction.emoji, currUserReacted: 0,
+                                                    name: reaction.name, count: 0, reactedUsers: {}
+                                                }
+            });
+
+            let totalReactedCount = 0;
+            userCommentReactions.forEach(function(commentReaction) {
+                 createdReactions[commentReaction.id].count++;
+                 totalReactedCount++;
+                 if(commentReaction.user_id == $rootScope.globals.currentUser.userId) {
+                    createdReactions[commentReaction.id].currUserReacted = 1;
+                    createdReactions[commentReaction.id].commentReactionId = commentReaction.id;
                  }
             });
             callback(createdReactions, totalReactedCount);
@@ -63,13 +104,31 @@ angular.module('Helpers')
                .success(function (response) {
                     let userContentReactions = response;
                     if($rootScope.reactionsList) {
-                        helper._getContentReactions(userContentReactions, callback);
+                        helper._getContentReactions(userContentReactions.reactions, callback);
                     }
                     else {
                         $http.get($rootScope.serverUrl+'reactions')
                            .success(function (response) {
                                 $rootScope.reactionsList = response;
-                                helper._getContentReactions(userContentReactions, callback);
+                                helper._getContentReactions(userContentReactions.reactions, callback);
+                            });
+                    }
+               });
+        };
+
+        helper.getCommentReactions = function (commentId, callback) {
+            $http.get($rootScope.serverUrl+'comment_reactions?comment_id='+ commentId)
+               .success(function (response) {
+                    let userCommentReactions = response;
+                    $rootScope.comments = response.reactions
+                    if($rootScope.reactionsList) {
+                        helper._getCommentReactions(userCommentReactions.reactions, callback);
+                    }
+                    else {
+                        $http.get($rootScope.serverUrl+'reactions')
+                           .success(function (response) {
+                                $rootScope.reactionsList = response;
+                                helper._getCommentReactions(userCommentReactions.reactions, callback);
                             });
                     }
                });
@@ -82,9 +141,9 @@ angular.module('Helpers')
             }
             $http.get(requestUrl)
                .success(function (response) {
-                    let userContentReactions = response;
+                    let userContentReactions = response.reactions;
                     let reactedUserList = new Object();
-                    $rootScope.userList.forEach(function(user) {
+                    $rootScope.userList.users.forEach(function(user) {
                         userContentReactions.forEach(function(contentReaction) {
                             if(contentReaction.user_id == user.id) {
                                 reactedUserList[user.id] = user;
@@ -95,17 +154,17 @@ angular.module('Helpers')
                 });
         };
 
-        helper.triggerReaction = function (contentId, reactionId, contentReactionId, userId, callback) {
+        helper.triggerReaction = function (contentId, reactionId, contentReactionId, userId, content_type, callback) {
             if(contentReactionId && $('#content-'+contentId+'-react-'+reactionId).hasClass('selected')) {
-                $http.delete($rootScope.serverUrl+'user_content_reactions/'+ contentReactionId)
+                $http.delete($rootScope.serverUrl+`user_content_reactions?content_id=${contentId}&reaction_id=${reactionId}&user_id=${userId}&content_type=${content_type}`)
                    .success(function (response) {
                         callback();
                    });
-            }
+                }
             else {
-                $http.post($rootScope.serverUrl+'user_content_reactions?id=', {content_id: contentId, reaction_id: reactionId, user_id: userId})
-                   .success(function (response) {                        
-                        callback(response.id);
+                $http.post($rootScope.serverUrl+`user_content_reactions?content_id=${contentId}&reaction_id=${reactionId}&user_id=${userId}&content_type=${content_type}`)
+                   .success(function (response) {     
+                        callback(response.reaction.id);
                    });
             }
         };

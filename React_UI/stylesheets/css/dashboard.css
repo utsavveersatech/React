@@ -74,4 +74,16 @@ body.fixed {
     #postsContainer .post .message {
       font-size: 12px; }
 
+  body .commentContainer .delete_comments{
+    padding: 0.75rem 2rem;
+    border-radius: 1rem;
+    font-size: 1.5rem;
+    background-color: #008CBA;
+    color: black;
+    border: none;
+  }
+  .new-comment{
+    width: 100%;
+    margin-top: 1rem;
+  }
 /*# sourceMappingURL=dashboard.css.map */

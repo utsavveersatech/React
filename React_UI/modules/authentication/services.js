@@ -12,18 +12,20 @@ angular.module('Authentication')
             $http.post('http://localhost:3000/api/v1/users/search', { username: username, password: password })
                .success(function (response) {
                    callback(response);
+                   $rootScope.globals.currentUser.userId = response.userId
                });
 
         };
  
-        service.SetCredentials = function (username, password, manager) {
+        service.SetCredentials = function (username, password, manager, userId) {
             var authdata = Base64.encode(username + ':' + password);
  
             $rootScope.globals = {
                 currentUser: {
                     username: username,
                     manager: manager,
-                    authdata: authdata
+                    authdata: authdata,
+                    userId: userId
                 }
             };
  

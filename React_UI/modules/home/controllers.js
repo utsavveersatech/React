@@ -18,7 +18,7 @@ angular.module('Home')
     ['$scope', '$rootScope', '$http', '$location', '$timeout', 'Helpers',
     function ($scope, $rootScope, $http, $location, $timeout, Helpers) {
     	$scope.loading = true;
-    	$rootScope.globals.currentUser.userId = 1;
+    	// $rootScope.globals.currentUser.userId = 1;
     	$scope.logouttransition = Helpers.logouttransition;
 
     	Helpers.getAllUsers();
@@ -119,12 +119,18 @@ angular.module('Home')
       	}
       	else {
       		$scope.reactedUsers = {};
-      		$rootScope.globals.currentUser.userId = 1;
-	      	$scope.contentId = 1; // $rootScope.editrecord.productname;
-	      	$scope.contents = {
-	      						'2': {content: 'static comment 1', author_id: 2, author: 'User 2', contentId : '2'},
-	      					    '3': {content: 'static comment 2', author_id: 1, author: 'User 1 again', contentId : '3'}
-	      					};
+      		// $rootScope.globals.currentUser.userId = 1;
+	      	$scope.contentId = $rootScope.editrecord.id;
+					Helpers.getComments($scope.contentId,function(comments){
+
+						let comm = comments.comments
+						console.log(comm)
+						$scope.contents = {comm};
+					});
+	      	// $scope.contents = {
+	      	// 					'2': {content: 'static comment 1', author_id: 2, author: 'User 2', contentId : '2'},
+	      	// 				    '3': {content: 'static comment 2', author_id: 1, author: 'User 1 again', contentId : '3'}
+	      	// 				};
 
 	      	// load post reactions
 	        Helpers.getContentReactions($scope.contentId, function(contentReactions, totalReactedCount) {
@@ -137,24 +143,38 @@ angular.module('Home')
 		        			$('#content-'+$scope.contentId+'-react-'+reactionKey).addClass('selected');
 		        		}
 		        	});
-				});
+						});
+	        });
+
+					Helpers.getCommentReactions($scope.contentId, function(commentReactions, totalReactedCount) {
+						console.log(commentReactions)
+	        	$scope.commentReactions = commentReactions;
+	        	$scope.totalReactedCount = totalReactedCount;
+
+	        	$scope.$on('ngRepeatFinished', function(ngRepeatFinishedEvent) {
+			    	Object.keys($scope.commentReactions).forEach(function(reactionKey) {
+		        		if($scope.commentReactions[reactionKey].currUserReacted > 0){
+		        			$('#content-'+$scope.contentId+'-react-'+reactionKey).addClass('selected');
+		        		}
+		        	});
+						});
 	        });
 
 	        // load comment reactions
-			Object.keys($scope.contents).forEach(function(key) {
-		        Helpers.getContentReactions(key, function(contentReactions, totalReactedCount) {
-		        	$scope.contents[key].contentReactions = contentReactions;
-		        	$scope.contents[key].totalReactedCount = totalReactedCount;
+			// Object.keys($scope.contents).forEach(function(key) {
+		    //     Helpers.getContentReactions(key, function(contentReactions, totalReactedCount) {
+		    //     	$scope.contents[key].contentReactions = contentReactions;
+		    //     	$scope.contents[key].totalReactedCount = totalReactedCount;
 
-		        	$scope.$on('ngRepeatCommentFinished', function(ngRepeatFinishedEvent) {
-			        	Object.keys(contentReactions).forEach(function(reactionKey) {
-			        		if(contentReactions[reactionKey].currUserReacted > 0){
-			        			$('#content-'+key+'-react-'+reactionKey).addClass('selected');
-			        		}
-			        	});
-		        	});
-		        });
-            });
+		    //     	$scope.$on('ngRepeatCommentFinished', function(ngRepeatFinishedEvent) {
+			//         	Object.keys(contentReactions).forEach(function(reactionKey) {
+			//         		if(contentReactions[reactionKey].currUserReacted > 0){
+			//         			$('#content-'+key+'-react-'+reactionKey).addClass('selected');
+			//         		}
+			//         	});
+		    //     	});
+		    //     });
+            // });
 
 	        $("#dimmer").click(function(){
 				$('.reactionsContainer').removeClass('display');
@@ -190,6 +210,23 @@ angular.module('Home')
         	$('#dimmer').css('display', 'block');
         	$('#reactionsContainer-'+ contentId).addClass('display');
         };
+
+				$scope.openCommentsReactionsContainer = function(commentId){
+					$('#dimmer').css('display', 'block');
+        	$('#commentsReactionsContainer-'+ commentId).addClass('display');
+					Helpers.getCommentReactions(commentId, function(commentReactions, totalReactedCount) {
+	        	$scope.commentReactions = commentReactions;
+	        	$scope.totalReactedCount = totalReactedCount;
+
+	        	// $scope.$on('ngRepeatFinished', function(ngRepeatFinishedEvent) {
+			    	Object.keys($scope.commentReactions).forEach(function(reactionKey) {
+		        		if($scope.commentReactions[reactionKey].currUserReacted > 0){
+		        			$('#content-'+commentId+'-react-'+reactionKey).addClass('selected');
+		        		}
+		        	});
+						// });
+	        });
+				}
 
         $scope.getReactedUsersPopup = function(key) {
         	$(".reactorsSection").hide();
@@ -232,10 +269,29 @@ angular.module('Home')
         	$scope.getReactedUsersPopup('All', $scope.popupContentReactions);
         };
 
+				$scope.deleteComments = function(comment_id){
+					Helpers.deleteComments(comment_id, function(message){
+						Helpers.getComments($scope.contentId,function(comments){
+
+							let comm = comments.comments
+							$scope.contents = {comm};
+						});
+					})
+				}
+
+				$scope.editComments = function(comment_id, comment, userId){
+					Helpers.editComments(comment_id, comment, userId, function(comments){
+						Helpers.getComments($scope.contentId,function(comments){
+							let comm = comments.comments
+							$scope.contents = {comm};
+						});
+					})
+				}
+
         $scope.toggleTriggerReaction = function (contentId, reactionId, contentReactionId, isPost=false) {
         	if(!$scope.dataLoading) {
 	        	$scope.dataLoading = true;
-		        Helpers.triggerReaction(contentId, reactionId, contentReactionId, $rootScope.globals.currentUser.userId, function(id) {
+		        Helpers.triggerReaction(contentId, reactionId, contentReactionId, $rootScope.globals.currentUser.userId, 'Inventory', function(id) {
 		        	let contentReactions = isPost ? $scope.contentReactions : $scope.contents[contentId].contentReactions;
 		        	if(id) {
 		        		contentReactions[reactionId].contentReactionId = id;
@@ -258,6 +314,44 @@ angular.module('Home')
         	}
         };
 
+				$scope.toggleCommentTriggerReaction = function (commentId, reactionId, commentReactionId, isPost=false) {
+					
+        	if(!$scope.dataLoading) {
+	        	$scope.dataLoading = true;
+		        Helpers.triggerReaction(commentId, reactionId, commentReactionId, $rootScope.globals.currentUser.userId, 'Comment', function(id) {
+		        	let commentReactions = $scope.commentReactions
+		        	if(id) {
+								console.log(id)
+		        		commentReactions[reactionId].contentReactionId = id;
+		        		commentReactions[reactionId].reactedUsers[$rootScope.globals.currentUser.userId] =  $rootScope.globals.currentUser.userList[0];
+		        		commentReactions[reactionId].currUserReacted = 1;
+		        		commentReactions[reactionId].count++;
+		        		$scope.totalReactedCount++;		
+		        		$('#content-'+commentId+'-react-'+reactionId).addClass('selected');
+								Helpers.getComments($scope.contentId,function(comments){
+									let comm = comments.comments
+									$scope.contents = {comm};
+									$('#dimmer').css('display', 'none');
+								});
+		        	}
+		        	else {
+		        		delete commentReactions[reactionId].contentReactionId;
+		        		delete commentReactions[reactionId].reactedUsers[$rootScope.globals.currentUser.userId];
+		        		commentReactions[reactionId].currUserReacted = 0;
+		        		commentReactions[reactionId].count--;
+		        		$scope.totalReactedCount--;
+		        		$('#content-'+commentId+'-react-'+reactionId).removeClass('selected');
+								Helpers.getComments($scope.contentId,function(comments){
+									let comm = comments.comments
+									$scope.contents = {comm};
+									$('#dimmer').css('display', 'none');
+								});
+		        	}
+		        	$scope.dataLoading = false;
+		        });
+        	}
+        };
+
     	$scope.logouttransition = Helpers.logouttransition;
 
         $scope.dashboardtransition = Helpers.dashboardtransition;
@@ -269,14 +363,28 @@ angular.module('Home')
 				productname: $rootScope.editrecord.productname,
 				vendor: $rootScope.editrecord.vendor,
 			}).success(function (response) {
-                   if(response.success) {
-	                    $location.path('/');
-	                } else {
-	                    $scope.error = response.message;
-	                    $scope.dataLoading = false;
-	                }
-               });
-        };
+				if(response.success) {
+						$location.path('/');
+				} else {
+					$scope.error = response.message;
+					$scope.dataLoading = false;
+				}
+			});
+			};
+
+				$scope.saveNewComment = function(content){
+					$http.post(`http://localhost:3000/api/v1/comments/new?user_id=${$rootScope.globals.currentUser.userId}&inventory_id=${$scope.contentId}`,{
+						content: content,
+						username: $rootScope.globals.currentUser.username
+					}).success(function(response){
+						Helpers.getComments($scope.contentId,function(comments){
+							let comm = comments.comments
+							$scope.contents = {comm};
+						});
+					})
+				}
 
         $scope.cancel = Helpers.dashboardtransition;
     }]);
+
+		
